@@ -107,7 +107,7 @@ async function processWhatsNew(range) {
 
     console.log("RAW SUMMARY:", summary);
 
-    await axios.post(
+    const response = await axios.post(
       "https://slack.com/api/chat.postMessage",
       {
         channel: process.env.CHANNEL_ID,
@@ -119,6 +119,8 @@ async function processWhatsNew(range) {
         }
       }
     );
+
+    console.log("Slack response:", response.data);
 
   } catch (err) {
 
