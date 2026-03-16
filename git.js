@@ -17,7 +17,7 @@ export function getCommits(range) {
   // clone repo if not exists
   if (!fs.existsSync(repoPath)) {
 
-    console.log("Cloning repository...");
+    console.log("Cloning repository...", repoUrl);
 
     execSync(`git clone ${repoUrl} ${repoPath}`, { stdio: "inherit" });
 
