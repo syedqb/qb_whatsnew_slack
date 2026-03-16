@@ -87,7 +87,11 @@ app.post("/slack/interactivity", async (req, res) => {
 
     const commits = await getCommits(range);
 
+    console.log("RAW COMMIS:", commits);
+
     const summary = await summarize(commits);
+
+    console.log("RAW SUMMARY:", summary);
 
     await axios.post(
       "https://slack.com/api/chat.postMessage",
