@@ -1,11 +1,9 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 export async function summarize(commits) {
 
@@ -22,20 +20,31 @@ Categorize commits into:
 ⚠️ Potential Impact
 
 Use simple language.
+Combine similar commits.
 
 Commits:
 ${commits}
 `;
 
-  const response = await client.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "user",
-        content: prompt
-      }
-    ]
-  });
+  try {
 
-  return response.choices[0].message.content;
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash"
+    });
+
+    const result = await model.generateContent(prompt);
+
+    const response = await result.response;
+
+    return response.text();
+
+  } catch (err) {
+
+    console.error("Gemini error:", err);
+
+    return `⚠️ AI summary failed.
+
+Raw commits:
+${commits}`;
+  }
 }
