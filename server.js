@@ -13,6 +13,10 @@ app.use(bodyParser.json());
 
 const BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
 
+// import { testGeminiModel } from "./summarizer.js";
+
+// await testGeminiModel("gemini-2.5-flash");
+
 app.post("/slack/whatsnew", async (req, res) => {
 
   const trigger_id = req.body.trigger_id;
