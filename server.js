@@ -85,9 +85,23 @@ app.post("/slack/interactivity", async (req, res) => {
     const range =
       payload.view.state.values.range.range_select.selected_option.value;
 
+    // respond to Slack immediately (prevents timeout)
+    res.json({ response_action: "clear" });
+
+    // run heavy work in background
+    processWhatsNew(range);
+
+  }
+
+});
+
+async function processWhatsNew(range) {
+
+  try {
+
     const commits = await getCommits(range);
 
-    console.log("RAW COMMIS:", commits);
+    console.log("RAW COMMITS:", commits);
 
     const summary = await summarize(commits);
 
@@ -106,9 +120,13 @@ app.post("/slack/interactivity", async (req, res) => {
       }
     );
 
-    res.json({ response_action: "clear" });
+  } catch (err) {
+
+    console.error("WhatsNew error:", err);
+
   }
-});
+
+}
 
 app.listen(process.env.PORT, () => {
   console.log("Server running");
