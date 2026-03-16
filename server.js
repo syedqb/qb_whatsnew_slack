@@ -11,11 +11,10 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+
+
 const BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
 
-// import { testGeminiModel } from "./summarizer.js";
-
-// await testGeminiModel("gemini-2.5-flash");
 
 app.post("/slack/whatsnew", async (req, res) => {
 
@@ -77,7 +76,9 @@ app.post("/slack/whatsnew", async (req, res) => {
 
 app.post("/slack/interactivity", async (req, res) => {
 
-  const payload = JSON.parse(req.body.payload);
+  const payload = JSON.parse(req.body?.payload || "{}");
+
+  console.log("RAW BODY:", req.body);
 
   if (payload.type === "view_submission") {
 
